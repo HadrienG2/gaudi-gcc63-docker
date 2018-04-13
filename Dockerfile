@@ -84,9 +84,15 @@ RUN rm -rf GSL
 RUN git clone --branch=0.3.5 --single-branch                                   \
               https://github.com/ericniebler/range-v3.git
 
-# Build and install range-v3
+# Build range-v3
 RUN cd range-v3 && mkdir build && cd build                                     \
-    && cmake .. && make -j8 && make install
+    && cmake .. && make -j8
+
+# Check that the range-v3 build is working properly
+RUN cd range-v3/build && ctest -j8
+
+# Install range-v3
+RUN cd range-v3/build && make install
 
 # Get rid of the range-v3 build directory
 RUN rm -rf range-v3
