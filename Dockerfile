@@ -16,7 +16,7 @@ RUN apt install --yes dpkg-dev libxpm-dev libxft-dev libglu1-mesa-dev          \
                       liblz4-dev liblz4-tool libblas-dev
 
 # Install other Gaudi build prerequisites
-RUN apt install --yes doxygen graphviz
+RUN apt install --yes doxygen graphviz libboost-all-dev
 
 
 # === INSTALL CMAKE ===
@@ -100,6 +100,7 @@ RUN rm -rf range-v3
 
 # === TODO: Install other Gaudi build dependencies ===
 
+# === TODO: Download and attempt to build upstream Gaudi? ===
 
 
 # Clean up the system when we are done
