@@ -13,7 +13,7 @@ RUN apt install --yes dpkg-dev libxpm-dev libxft-dev libglu1-mesa-dev          \
                       libglew-dev libftgl-dev libfftw3-dev libcfitsio-dev      \
                       graphviz-dev libavahi-compat-libdnssd-dev libldap2-dev   \
                       python-dev libgsl0-dev libqt4-dev libgl2ps-dev           \
-                      liblz4-dev liblz4-tool
+                      liblz4-dev liblz4-tool libblas-dev
 
 
 # === INSTALL CMAKE ===
