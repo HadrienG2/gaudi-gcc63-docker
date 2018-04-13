@@ -32,6 +32,22 @@ RUN cd cmake-3.11.0 && mkdir build && cd build                                 \
 RUN rm -rf cmake-3.11.0
 
 
+# === INSTALL INTEL TBB ===
+
+# Clone TBB v2018u3
+RUN git clone --branch=2018_U3 --single-branch https://github.com/01org/tbb.git
+
+# Build TBB
+RUN cd tbb && make -j8
+
+# "Install" TBB (yes, it does seem like the WTF is strong at Intel)
+RUN echo "(cd tbb                                                              \
+           && make info | tail -n 1 > tbb_prefix.env                           \
+           && source tbb_prefix.env                                            \
+           && source build/${tbb_build_prefix}_release/tbbvars.sh)"            \
+    >> ~/.bashrc
+
+
 # === INSTALL ROOT ===
 
 # Clone the desired ROOT version
@@ -41,10 +57,10 @@ RUN git clone --branch=v6-12-06 --single-branch                                \
 # Configure a reasonably minimal build of ROOT
 RUN cd ROOT && mkdir build-dir && cd build-dir                                 \
     && cmake -Dbuiltin_ftgl=OFF -Dbuiltin_glew=OFF -Dbuiltin_lz4=OFF           \
-             -Dbuiltin_tbb=ON -Dcastor=OFF -Dcxx14=ON -Ddavix=OFF              \
-             -Dfail-on-missing=ON -Dgfal=OFF -Dgnuinstall=ON -Dhttp=OFF        \
-             -Dmysql=OFF -Doracle=OFF -Dpgsql=OFF -Dpythia6=OFF -Dpythia8=OFF  \
-             -Droot7=ON -Dssl=OFF -Dxrootd=OFF ..
+             -Dcastor=OFF -Dcxx14=ON -Ddavix=OFF -Dfail-on-missing=ON          \
+             -Dgfal=OFF -Dgnuinstall=ON -Dhttp=OFF -Dmysql=OFF -Doracle=OFF    \
+             -Dpgsql=OFF -Dpythia6=OFF -Dpythia8=OFF -Droot7=ON -Dssl=OFF      \
+             -Dxrootd=OFF ..
 
 # Build and install ROOT
 RUN cd ROOT/build-dir && make -j8 && make install
@@ -100,7 +116,7 @@ RUN rm -rf range-v3
 
 # === TODO: Install other Gaudi build dependencies ===
 
-# === TODO: Download and attempt to build upstream Gaudi? ===
+# === TODO: Download and attempt to build/test upstream Gaudi ===
 
 
 # Clean up the system when we are done
