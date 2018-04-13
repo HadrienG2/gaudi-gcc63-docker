@@ -46,8 +46,10 @@ RUN cd tbb                                                                     \
     && make info | tail -n 1 > tbb_prefix.env                                  \
     && source tbb_prefix.env                                                   \
     && ln -s build/${tbb_build_prefix}_release lib                             \
-    && echo "source `pwd`/lib/tbbvars.sh" >> ~/.bashrc                         \
-    && echo "export TBB_ROOT_DIR=`pwd`" >> ~/.bashrc
+    && echo "source `pwd`/lib/tbbvars.sh" >> ~/.bashrc
+
+# For some reason, export in .bashrc does not work as expected :'(
+ENV TBB_ROOT_DIR /tbb
 
 
 # === INSTALL ROOT ===
