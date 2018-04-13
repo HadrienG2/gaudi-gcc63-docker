@@ -126,5 +126,5 @@ RUN rm -rf range-v3
 # === TODO: Download and attempt to build/test upstream Gaudi ===
 
 
-# Clean up the system when we are done
-RUN apt-get clean
+# TODO: Clean up the system when we are done
+# RUN apt-get clean
