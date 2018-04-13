@@ -7,8 +7,8 @@ SHELL ["/bin/bash", "-c"]
 # === SYSTEM SETUP ===
 
 # Setup an environment script (you can think of it as a non-interactive bashrc)
-RUN touch ~/setup.sh
-ENV BASH_ENV ~/setup.sh
+RUN touch /bash_env.sh
+ENV BASH_ENV /bash_env.sh
 
 # Update the host system
 RUN apt-get update && apt-get upgrade --yes
