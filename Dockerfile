@@ -1,7 +1,7 @@
 FROM gcc:6.2
 LABEL Description="GCC 6.2-based Gaudi build environment" Version="0.1"
 CMD bash
-SHELL ["/bin/bash", "-c"]
+SHELL ["/bin/bash", "-c", "--login"]
 
 
 # === SYSTEM SETUP ===
@@ -14,7 +14,7 @@ RUN apt install --yes dpkg-dev libxpm-dev libxft-dev libglu1-mesa-dev          \
                       libglew-dev libftgl-dev libfftw3-dev libcfitsio-dev      \
                       graphviz-dev libavahi-compat-libdnssd-dev libldap2-dev   \
                       python-dev libgsl0-dev libqt4-dev libgl2ps-dev           \
-                      liblz4-dev liblz4-tool libblas-dev
+                      liblz4-dev liblz4-tool libblas-dev python-numpy
 
 # Install other Gaudi build prerequisites
 RUN apt install --yes doxygen graphviz libboost-all-dev
@@ -46,10 +46,8 @@ RUN cd tbb                                                                     \
     && make info | tail -n 1 > tbb_prefix.env                                  \
     && source tbb_prefix.env                                                   \
     && ln -s build/${tbb_build_prefix}_release lib                             \
-    && echo "source `pwd`/lib/tbbvars.sh" >> ~/.bashrc
-
-# For some reason, export in .bashrc does not work as expected :'(
-ENV TBB_ROOT_DIR /tbb
+    && echo "source `pwd`/lib/tbbvars.sh" >> ~/.profile                        \
+    && echo "export TBB_ROOT_DIR=`pwd`"
 
 
 # === INSTALL ROOT ===
