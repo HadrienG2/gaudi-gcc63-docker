@@ -1,6 +1,7 @@
 FROM gcc:6.2
 LABEL Description="GCC 6.2-based Gaudi build environment" Version="0.1"
 CMD bash
+SHELL ["/bin/bash", "-c"]
 
 
 # === SYSTEM SETUP ===
@@ -40,12 +41,13 @@ RUN git clone --branch=2018_U3 --single-branch https://github.com/01org/tbb.git
 # Build TBB
 RUN cd tbb && make -j8
 
-# "Install" TBB (yes, it does seem like the WTF is strong at Intel)
-RUN echo "(cd tbb                                                              \
-           && make info | tail -n 1 > tbb_prefix.env                           \
-           && source tbb_prefix.env                                            \
-           && source build/${tbb_build_prefix}_release/tbbvars.sh)"            \
-    >> ~/.bashrc
+# "Install" TBB (Yes, TBB has nothing like "make install". Ask Intel.)
+RUN cd tbb                                                                     \
+    && make info | tail -n 1 > tbb_prefix.env                                  \
+    && source tbb_prefix.env                                                   \
+    && ln -s build/${tbb_build_prefix}_release lib                             \
+    && echo "source `pwd`/lib/tbbvars.sh" >> ~/.bashrc                         \
+    && echo "export TBB_ROOT_DIR=`pwd`" >> ~/.bashrc
 
 
 # === INSTALL ROOT ===
