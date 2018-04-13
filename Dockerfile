@@ -1,23 +1,28 @@
 FROM gcc:6.2
 LABEL Description="GCC 6.2-based Gaudi build environment" Version="0.1"
 CMD bash
-SHELL ["/bin/bash", "-c", "--login"]
+SHELL ["/bin/bash", "-c"]
 
 
 # === SYSTEM SETUP ===
 
+# Setup an environment script (you can think of it as a non-interactive bashrc)
+RUN touch ~/setup.sh
+ENV BASH_ENV ~/setup.sh
+
 # Update the host system
-RUN apt update && apt upgrade --yes
+RUN apt-get update && apt-get upgrade --yes
 
 # Install ROOT's build prerequisites (yes, they are ridiculous)
-RUN apt install --yes dpkg-dev libxpm-dev libxft-dev libglu1-mesa-dev          \
-                      libglew-dev libftgl-dev libfftw3-dev libcfitsio-dev      \
-                      graphviz-dev libavahi-compat-libdnssd-dev libldap2-dev   \
-                      python-dev libgsl0-dev libqt4-dev libgl2ps-dev           \
-                      liblz4-dev liblz4-tool libblas-dev python-numpy
+RUN apt-get install --yes dpkg-dev libxpm-dev libxft-dev libglu1-mesa-dev      \
+                          libglew-dev libftgl-dev libfftw3-dev libcfitsio-dev  \
+                          graphviz-dev libavahi-compat-libdnssd-dev            \
+                          libldap2-dev python-dev libgsl0-dev libqt4-dev       \
+                          libgl2ps-dev liblz4-dev liblz4-tool libblas-dev      \
+                          python-numpy
 
 # Install other Gaudi build prerequisites
-RUN apt install --yes doxygen graphviz libboost-all-dev
+RUN apt-get install --yes doxygen graphviz libboost-all-dev
 
 
 # === INSTALL CMAKE ===
@@ -46,8 +51,8 @@ RUN cd tbb                                                                     \
     && make info | tail -n 1 > tbb_prefix.env                                  \
     && source tbb_prefix.env                                                   \
     && ln -s build/${tbb_build_prefix}_release lib                             \
-    && echo "source `pwd`/lib/tbbvars.sh" >> ~/.profile                        \
-    && echo "export TBB_ROOT_DIR=`pwd`"
+    && echo "source `pwd`/lib/tbbvars.sh" >> "$BASH_ENV"                       \
+    && echo "export TBB_ROOT_DIR=`pwd`" >> "$BASH_ENV"
 
 
 # === INSTALL ROOT ===
