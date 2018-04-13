@@ -9,11 +9,24 @@ CMD bash
 RUN apt update && apt upgrade --yes
 
 # Install ROOT's build prerequisites (yes, they are ridiculous)
-RUN apt install --yes dpkg-dev cmake libxpm-dev libxft-dev libglu1-mesa-dev    \
+RUN apt install --yes dpkg-dev libxpm-dev libxft-dev libglu1-mesa-dev          \
                       libglew-dev libftgl-dev libfftw3-dev libcfitsio-dev      \
                       graphviz-dev libavahi-compat-libdnssd-dev libldap2-dev   \
                       python-dev libgsl0-dev libqt4-dev libtbb-dev             \
                       libgl2ps-dev liblz4-dev liblz4-tool ninja
+
+
+# === INSTALL CMAKE ===
+
+# Dowload and extract CMake v3.11.0
+RUN curl https://cmake.org/files/v3.11/cmake-3.11.0.tar.gz | tar -xz
+
+# Build and install CMake
+RUN cd cmake-3.11.0 && mkdir build && cd build                                 \
+    && ../bootstrap && make -j8 && make install
+
+# Get rid of the CMake build directory
+RUN rm -rf cmake-3.11.0
 
 
 # === INSTALL ROOT ===
