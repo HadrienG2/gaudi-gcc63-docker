@@ -51,8 +51,7 @@ RUN cd tbb                                                                     \
     && make info | tail -n 1 > tbb_prefix.env                                  \
     && source tbb_prefix.env                                                   \
     && ln -s build/${tbb_build_prefix}_release lib                             \
-    && echo "source `pwd`/lib/tbbvars.sh" >> "$BASH_ENV"                       \
-    && echo "export TBB_ROOT_DIR=`pwd`" >> "$BASH_ENV"
+    && echo "source `pwd`/lib/tbbvars.sh" >> "$BASH_ENV"
 
 
 # === INSTALL ROOT ===
