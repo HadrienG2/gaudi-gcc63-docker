@@ -13,7 +13,7 @@ RUN apt install --yes dpkg-dev libxpm-dev libxft-dev libglu1-mesa-dev          \
                       libglew-dev libftgl-dev libfftw3-dev libcfitsio-dev      \
                       graphviz-dev libavahi-compat-libdnssd-dev libldap2-dev   \
                       python-dev libgsl0-dev libqt4-dev libtbb-dev             \
-                      libgl2ps-dev liblz4-dev liblz4-tool ninja
+                      libgl2ps-dev liblz4-dev liblz4-tool
 
 
 # === INSTALL CMAKE ===
@@ -37,14 +37,14 @@ RUN git clone --branch=v6-12-06 --single-branch                                \
 
 # Configure a reasonably minimal build of ROOT
 RUN cd ROOT && mkdir build-dir && cd build-dir                                 \
-    && cmake -GNinja -Dbuiltin_ftgl=OFF -Dbuiltin_glew=OFF -Dbuiltin_lz4=OFF   \
+    && cmake -Dbuiltin_ftgl=OFF -Dbuiltin_glew=OFF -Dbuiltin_lz4=OFF           \
              -Dcastor=OFF -Dcxx14=ON -Ddavix=OFF -Dfail-on-missing=ON          \
              -Dgfal=OFF -Dgnuinstall=ON -Dhttp=OFF -Dmysql=OFF -Doracle=OFF    \
              -Dpgsql=OFF -Dpythia6=OFF -Dpythia8=OFF -Droot7=ON -Dssl=OFF      \
              -Dxrootd=OFF ..
 
 # Build and install ROOT
-RUN cd ROOT/build-dir && ninja && ninja install
+RUN cd ROOT/build-dir && make -j8 && make install
 
 # Set up the environment for running ROOT
 ENV LD_LIBRARY_PATH /usr/local/lib/root/:${LD_LIBRARY_PATH}
