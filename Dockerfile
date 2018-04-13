@@ -56,6 +56,19 @@ RUN root -b -q -e "(6*7)-(6*7)"
 RUN rm -rf ROOT
 
 
+# === INSTALL C++ GUIDELINE SUPPORT LIBRARY ===
+
+# Download the GSL
+RUN git clone https://github.com/Microsoft/GSL.git
+
+# Build and install the GSL
+RUN cd GSL && mkdir build && cd build                                          \
+    && cmake .. && make -j8 && make install
+
+# Get rid of the GSL build directory
+RUN rm -rf GSL
+
+
 # === TODO: Install other Gaudi build dependencies ===
 
 
