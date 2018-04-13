@@ -15,6 +15,9 @@ RUN apt install --yes dpkg-dev libxpm-dev libxft-dev libglu1-mesa-dev          \
                       python-dev libgsl0-dev libqt4-dev libgl2ps-dev           \
                       liblz4-dev liblz4-tool libblas-dev
 
+# Install other Gaudi build prerequisites
+RUN apt install --yes doxygen graphviz
+
 
 # === INSTALL CMAKE ===
 
@@ -61,12 +64,32 @@ RUN rm -rf ROOT
 # Download the GSL
 RUN git clone https://github.com/Microsoft/GSL.git
 
-# Build and install the GSL
+# Build the GSL
 RUN cd GSL && mkdir build && cd build                                          \
-    && cmake .. && make -j8 && make install
+    && cmake .. && make -j8
+
+# Check that the GSL build is working properly
+RUN cd GSL/build && ctest -j8
+
+# Install the GSL
+RUN cd GSL/build && make install
 
 # Get rid of the GSL build directory
 RUN rm -rf GSL
+
+
+# === INSTALL RANGE-V3
+
+# Download the range-v3 library (v0.3.5)
+RUN git clone --branch=0.3.5 --single-branch                                   \
+              https://github.com/ericniebler/range-v3.git
+
+# Build and install range-v3
+RUN cd range-v3 && mkdir build && cd build                                     \
+    && cmake .. && make -j8 && make install
+
+# Get rid of the range-v3 build directory
+RUN rm -rf range-v3
 
 
 # === TODO: Install other Gaudi build dependencies ===
