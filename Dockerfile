@@ -23,7 +23,9 @@ RUN apt-get install --yes dpkg-dev libxpm-dev libxft-dev libglu1-mesa-dev      \
 
 # Install other Gaudi build prerequisites
 RUN apt-get install --yes doxygen graphviz libboost-all-dev libcppunit-dev gdb \
-                          unzip
+                          unzip libxerces-c-dev uuid-dev libunwind-dev         \
+                          google-perftools libgoogle-perftools-dev             \
+                          libjemalloc-dev
 
 
 # === INSTALL CMAKE ===
@@ -135,6 +137,26 @@ RUN cp -r src/cpp/AIDA/ /usr/include/
 
 # Get rid of the rest of the package, we do not need it
 RUN rm -rf AIDA
+
+
+# === INSTALL CLHEP ===
+
+# Download CLHEP
+RUN git clone --branch=CLHEP_2_4_0_4 --single-branch                           \
+              https://gitlab.cern.ch/CLHEP/CLHEP.git
+
+# Build CLHEP
+RUN cd CLHEP && mkdir build && cd build                                        \
+    && cmake .. && make -j8
+
+# Test our CLHEP build
+RUN cd CLHEP/build && ctest -j8
+
+# Install CLHEP
+RUN cd CLHEP/build && make install
+
+# Get rid of the CLHEP build directory
+RUN rm -rf CLHEP
 
 
 # === TODO: Install other Gaudi build dependencies ===
