@@ -28,7 +28,7 @@ RUN apt-get install --yes git dpkg-dev g++ gcc binutils libx11-dev libxpm-dev  \
 RUN apt-get install --yes doxygen graphviz libboost-all-dev libcppunit-dev gdb \
                           unzip libxerces-c-dev uuid-dev libunwind-dev         \
                           google-perftools libgoogle-perftools-dev             \
-                          libjemalloc-dev libncurses5-dev ninja-build
+                          libjemalloc-dev libncurses5-dev ninja-build wget
 
 
 # === INSTALL CMAKE ===
@@ -47,7 +47,7 @@ RUN rm -rf cmake-3.11.0
 # === INSTALL INTEL TBB ===
 
 # Clone TBB v2018u3
-RUN git clone --branch=2018_U3 --depth 1 https://github.com/01org/tbb.git
+RUN git clone --branch=2018_U3 --depth=1 https://github.com/01org/tbb.git
 
 # Build TBB
 RUN cd tbb && make -j8
@@ -63,7 +63,7 @@ RUN cd tbb                                                                     \
 # === INSTALL ROOT ===
 
 # Clone the desired ROOT version
-RUN git clone --branch=v6-12-06 --depth 1                                      \
+RUN git clone --branch=v6-12-06 --depth=1                                      \
     https://github.com/root-project/root.git ROOT
 
 # Configure a reasonably minimal build of ROOT
@@ -91,7 +91,7 @@ RUN rm -rf ROOT
 # === INSTALL C++ GUIDELINE SUPPORT LIBRARY ===
 
 # Download the GSL
-RUN git clone --depth 1 https://github.com/Microsoft/GSL.git
+RUN git clone --depth=1 https://github.com/Microsoft/GSL.git
 
 # Build the GSL
 RUN cd GSL && mkdir build && cd build                                          \
@@ -110,7 +110,7 @@ RUN rm -rf GSL
 # === INSTALL RANGE-V3
 
 # Download the range-v3 library (v0.3.5)
-RUN git clone --branch=0.3.5 --depth 1                                         \
+RUN git clone --branch=0.3.5 --depth=1                                         \
               https://github.com/ericniebler/range-v3.git
 
 # Build range-v3
@@ -146,7 +146,7 @@ RUN rm -rf AIDA
 # === INSTALL CLHEP ===
 
 # Download CLHEP
-RUN git clone --branch=CLHEP_2_4_0_4 --depth 1                                 \
+RUN git clone --branch=CLHEP_2_4_0_4 --depth=1                                 \
               https://gitlab.cern.ch/CLHEP/CLHEP.git
 
 # Build CLHEP
@@ -181,7 +181,7 @@ RUN rm -rf HepPDT-2.06.01
 # === INSTALL HEPMC v3 ===
 
 # Download HepMC v3
-RUN git clone --depth 1 https://gitlab.cern.ch/hepmc/HepMC3.git
+RUN git clone --depth=1 https://gitlab.cern.ch/hepmc/HepMC3.git
 
 # Build and install HepMC
 RUN cd HepMC3 && mkdir build && cd build                                        \
@@ -198,7 +198,7 @@ RUN rm -rf HepMC3
 #       expecting the CMake files of HepMC3 together with the headers of HepMC2
 
 # Dowload HepMC v2
-RUN git clone --depth 1 https://gitlab.cern.ch/hepmc/HepMC.git
+RUN git clone --depth=1 https://gitlab.cern.ch/hepmc/HepMC.git
 
 # Build HepMC
 RUN cd HepMC && mkdir build && cd build                                        \
