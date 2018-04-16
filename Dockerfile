@@ -1,5 +1,5 @@
-FROM gcc:6.2
-LABEL Description="GCC 6.2-based Gaudi build environment" Version="0.1"
+FROM debian:stretch
+LABEL Description="GCC 6.3-based Gaudi build environment" Version="0.1"
 CMD bash
 SHELL ["/bin/bash", "-c"]
 
@@ -14,10 +14,13 @@ ENV BASH_ENV /bash_env.sh
 RUN apt-get update && apt-get upgrade --yes
 
 # Install ROOT's build prerequisites (yes, they are ridiculous)
-RUN apt-get install --yes dpkg-dev libxpm-dev libxft-dev libglu1-mesa-dev      \
-                          libglew-dev libftgl-dev libfftw3-dev libcfitsio-dev  \
-                          graphviz-dev libavahi-compat-libdnssd-dev            \
-                          libldap2-dev python-dev libgsl0-dev libqt4-dev       \
+RUN apt-get install --yes git dpkg-dev g++ gcc binutils libx11-dev libxpm-dev  \
+                          libxft-dev libxext-dev gfortran libssl-dev           \
+                          libpcre3-dev libglu1-mesa-dev libglew-dev            \
+                          libftgl-dev default-libmysqlclient-dev libfftw3-dev  \
+                          libcfitsio-dev graphviz-dev                          \
+                          libavahi-compat-libdnssd-dev libldap2-dev python-dev \
+                          libxml2-dev libkrb5-dev libgsl-dev libqt4-dev        \
                           libgl2ps-dev liblz4-dev liblz4-tool libblas-dev      \
                           python-numpy
 
