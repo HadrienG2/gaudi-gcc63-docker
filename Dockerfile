@@ -28,7 +28,7 @@ RUN apt-get install --yes git dpkg-dev g++ gcc binutils libx11-dev libxpm-dev  \
 RUN apt-get install --yes doxygen graphviz libboost-all-dev libcppunit-dev gdb \
                           unzip libxerces-c-dev uuid-dev libunwind-dev         \
                           google-perftools libgoogle-perftools-dev             \
-                          libjemalloc-dev libncurses5-dev
+                          libjemalloc-dev libncurses5-dev ninja-build
 
 
 # === INSTALL CMAKE ===
@@ -72,10 +72,10 @@ RUN cd ROOT && mkdir build-dir && cd build-dir                                 \
              -Dcastor=OFF -Dcxx14=ON -Ddavix=OFF -Dfail-on-missing=ON          \
              -Dgfal=OFF -Dgnuinstall=ON -Dhttp=OFF -Dmysql=OFF -Doracle=OFF    \
              -Dpgsql=OFF -Dpythia6=OFF -Dpythia8=OFF -Droot7=ON -Dssl=OFF      \
-             -Dxrootd=OFF ..
+             -Dxrootd=OFF -GNinja ..
 
 # Build and install ROOT
-RUN cd ROOT/build-dir && make -j8 && make install
+RUN cd ROOT/build-dir && ninja && ninja install
 
 # Prepare the environment for running ROOT
 RUN echo "export LD_LIBRARY_PATH=/usr/local/lib/root/:\${LD_LIBRARY_PATH}"     \
@@ -238,10 +238,10 @@ RUN git clone --origin upstream https://gitlab.cern.ch/gaudi/Gaudi/
 
 # Configure Gaudi
 RUN cd Gaudi && mkdir build && cd build                                        \
-    && cmake -DGAUDI_DIAGNOSTICS_COLOR=ON ..
+    && cmake -DGAUDI_DIAGNOSTICS_COLOR=ON -GNinja ..
 
 # Build Gaudi
-RUN cd Gaudi/build && make -j8
+RUN cd Gaudi/build && ninja
 
 # Test the Gaudi build
 RUN cd Gaudi/build && ctest -j8
