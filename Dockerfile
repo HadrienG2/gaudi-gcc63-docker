@@ -22,7 +22,8 @@ RUN apt-get install --yes dpkg-dev libxpm-dev libxft-dev libglu1-mesa-dev      \
                           python-numpy
 
 # Install other Gaudi build prerequisites
-RUN apt-get install --yes doxygen graphviz libboost-all-dev libcppunit-dev gdb
+RUN apt-get install --yes doxygen graphviz libboost-all-dev libcppunit-dev gdb \
+                          unzip
 
 
 # === INSTALL CMAKE ===
@@ -118,6 +119,22 @@ RUN cd range-v3/build && make install
 
 # Get rid of the range-v3 build directory
 RUN rm -rf range-v3
+
+
+# === INSTALL AIDA ===
+
+# Download, extract and delete the AIDA package
+RUN mkdir AIDA && cd AIDA                                                      \
+    && wget                                                                    \
+       ftp://ftp.slac.stanford.edu/software/freehep/AIDA/v3.2.1/aida-3.2.1.zip \
+    && unzip -q aida-3.2.1.zip                                                 \
+    && rm aida-3.2.1.zip
+
+# Install the AIDA headers
+RUN cp -r src/cpp/AIDA/ /usr/include/
+
+# Get rid of the rest of the package, we do not need it
+RUN rm -rf AIDA
 
 
 # === TODO: Install other Gaudi build dependencies ===
