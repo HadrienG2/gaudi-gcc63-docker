@@ -22,7 +22,7 @@ RUN apt-get install --yes dpkg-dev libxpm-dev libxft-dev libglu1-mesa-dev      \
                           python-numpy
 
 # Install other Gaudi build prerequisites
-RUN apt-get install --yes doxygen graphviz libboost-all-dev
+RUN apt-get install --yes doxygen graphviz libboost-all-dev libcppunit-dev gdb
 
 
 # === INSTALL CMAKE ===
