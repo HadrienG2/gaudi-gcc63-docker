@@ -95,13 +95,13 @@ RUN git clone https://github.com/Microsoft/GSL.git
 
 # Build the GSL
 RUN cd GSL && mkdir build && cd build                                          \
-    && cmake .. && make -j8
+    && cmake -GNinja .. && ninja
 
 # Check that the GSL build is working properly
 RUN cd GSL/build && ctest -j8
 
 # Install the GSL
-RUN cd GSL/build && make install
+RUN cd GSL/build && ninja install
 
 # Get rid of the GSL build directory
 RUN rm -rf GSL
@@ -115,13 +115,13 @@ RUN git clone --branch=0.3.5 --single-branch                                   \
 
 # Build range-v3
 RUN cd range-v3 && mkdir build && cd build                                     \
-    && cmake .. && make -j8
+    && cmake -GNinja .. && ninja
 
 # Check that the range-v3 build is working properly
 RUN cd range-v3/build && ctest -j8
 
 # Install range-v3
-RUN cd range-v3/build && make install
+RUN cd range-v3/build && ninja install
 
 # Get rid of the range-v3 build directory
 RUN rm -rf range-v3
@@ -151,13 +151,13 @@ RUN git clone --branch=CLHEP_2_4_0_4 --single-branch                           \
 
 # Build CLHEP
 RUN cd CLHEP && mkdir build && cd build                                        \
-    && cmake .. && make -j8
+    && cmake -GNinja .. && ninja
 
 # Test our CLHEP build
 RUN cd CLHEP/build && ctest -j8
 
 # Install CLHEP
-RUN cd CLHEP/build && make install
+RUN cd CLHEP/build && ninja install
 
 # Get rid of the CLHEP build directory
 RUN rm -rf CLHEP
@@ -185,7 +185,7 @@ RUN git clone https://gitlab.cern.ch/hepmc/HepMC3.git
 
 # Build and install HepMC
 RUN cd HepMC3 && mkdir build && cd build                                        \
-    && cmake .. && make -j8 && make install
+    && cmake -GNinja .. && ninja && ninja install
 
 # Get rid of the HepMC build directory
 RUN rm -rf HepMC3
