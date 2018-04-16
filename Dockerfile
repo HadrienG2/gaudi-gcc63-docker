@@ -22,13 +22,13 @@ RUN apt-get install --yes git dpkg-dev g++ gcc binutils libx11-dev libxpm-dev  \
                           libavahi-compat-libdnssd-dev libldap2-dev python-dev \
                           libxml2-dev libkrb5-dev libgsl-dev libqt4-dev        \
                           libgl2ps-dev liblz4-dev liblz4-tool libblas-dev      \
-                          python-numpy
+                          python-numpy liblzma-dev libsqlite3-dev libjpeg-dev
 
 # Install other Gaudi build prerequisites
 RUN apt-get install --yes doxygen graphviz libboost-all-dev libcppunit-dev gdb \
                           unzip libxerces-c-dev uuid-dev libunwind-dev         \
                           google-perftools libgoogle-perftools-dev             \
-                          libjemalloc-dev
+                          libjemalloc-dev libncurses5-dev
 
 
 # === INSTALL CMAKE ===
