@@ -185,7 +185,7 @@ RUN git clone --depth=1 https://gitlab.cern.ch/hepmc/HepMC3.git
 
 # Build and install HepMC
 RUN cd HepMC3 && mkdir build && cd build                                        \
-    && cmake -GNinja .. && ninja && ninja install
+    && cmake .. && make -j8 && make install
 
 # Get rid of the HepMC build directory
 RUN rm -rf HepMC3
