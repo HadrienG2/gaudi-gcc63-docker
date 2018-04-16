@@ -190,7 +190,7 @@ RUN rm -rf HepMC3
 
 # === INSTALL HEPMC v2 ===
 
-# NOTE: Why are we overwriting our HepMC 3 install with a HepMC2 one, you may
+# NOTE: Why are we overwriting our HepMC3 install with a HepMC2 one, you may
 #       wonder? The answer has to do with RELAX being hopelessly broken, and
 #       expecting the CMake files of HepMC3 together with the headers of HepMC2
 
