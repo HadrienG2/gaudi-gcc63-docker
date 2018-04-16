@@ -74,8 +74,9 @@ RUN cd ROOT && mkdir build-dir && cd build-dir                                 \
 # Build and install ROOT
 RUN cd ROOT/build-dir && make -j8 && make install
 
-# Set up the environment for running ROOT
-ENV LD_LIBRARY_PATH /usr/local/lib/root/:${LD_LIBRARY_PATH}
+# Prepare the environment for running ROOT
+RUN echo "export LD_LIBRARY_PATH=/usr/local/lib/root/:\${LD_LIBRARY_PATH}"      \
+      >> "$BASH_ENV"
 
 # Check that the ROOT install works
 RUN root -b -q -e "(6*7)-(6*7)"
@@ -133,7 +134,7 @@ RUN mkdir AIDA && cd AIDA                                                      \
     && rm aida-3.2.1.zip
 
 # Install the AIDA headers
-RUN cp -r src/cpp/AIDA/ /usr/include/
+RUN cp -r AIDA/src/cpp/AIDA /usr/include/
 
 # Get rid of the rest of the package, we do not need it
 RUN rm -rf AIDA
@@ -159,10 +160,91 @@ RUN cd CLHEP/build && make install
 RUN rm -rf CLHEP
 
 
-# === TODO: Install other Gaudi build dependencies ===
+# === INSTALL HEPPDT v2 ===
 
-# === TODO: Download and attempt to build/test upstream Gaudi ===
+# Download and extract HepPDT v2
+RUN curl                                                                       \
+      http://lcgapp.cern.ch/project/simu/HepPDT/download/HepPDT-2.06.01.tar.gz \
+      | tar -xz
+
+# Build and install HepPDT
+RUN cd HepPDT-2.06.01 && mkdir build && cd build                               \
+    && ../configure && make -j8 && make install
+
+# Get rid of the HepPDT build directory
+RUN rm -rf HepPDT-2.06.01
 
 
-# TODO: Clean up the system when we are done
-# RUN apt-get clean
+# === INSTALL HEPMC v3 ===
+
+# Download HepMC v3
+RUN git clone https://gitlab.cern.ch/hepmc/HepMC3.git
+
+# Build and install HepMC
+RUN cd HepMC3 && mkdir build && cd build                                        \
+    && cmake .. && make -j8 && make install
+
+# Get rid of the HepMC build directory
+RUN rm -rf HepMC3
+
+
+# === INSTALL HEPMC v2 ===
+
+# NOTE: Why are we overwriting our HepMC 3 install with a HepMC2 one, you may
+#       wonder? The answer has to do with RELAX being hopelessly broken, and
+#       expecting the CMake files of HepMC3 together with the headers of HepMC2
+
+# Dowload HepMC v2
+RUN git clone https://gitlab.cern.ch/hepmc/HepMC.git
+
+# Build HepMC
+RUN cd HepMC && mkdir build && cd build                                        \
+    && cmake -Dmomentum=GEV -Dlength=MM .. && make -j8
+
+# Test our build of HepMC
+RUN cd HepMC/build && make test -j8
+
+# Install HepMC
+RUN cd HepMC/build && make install
+
+# Get rid of the HepMC build directory
+RUN rm -rf HepMC
+
+
+# === INSTALL RELAX ===
+
+# Downlad and extract RELAX (yes, this file is not actually gzipped)
+RUN curl http://lcgpackages.web.cern.ch/lcgpackages/tarFiles/sources/RELAX-root6.tar.gz \
+      | tar -x
+
+# Build and install RELAX (wow, such legacy, much hacks!)
+RUN cd RELAX && mkdir build && cd build                                        \
+    && ln -s `which genreflex` /genreflex                                      \
+    && export CXXFLAGS="-I/usr/local/include/root/"                            \
+    && cmake .. && make -j8 && make install                                    \
+    && rm /genreflex && unset CXXFLAGS
+
+# Get rid of the RELAX build directory
+RUN rm -rf RELAX
+
+
+# === ATTEMPT A GAUDI TEST BUILD ===
+
+# Clone the Gaudi repository
+RUN git clone --origin upstream https://gitlab.cern.ch/gaudi/Gaudi/
+
+# Configure Gaudi
+RUN cd Gaudi && mkdir build && cd build                                        \
+    && cmake -DGAUDI_DIAGNOSTICS_COLOR=ON ..
+
+# Build Gaudi
+RUN cd Gaudi/build && make -j8
+
+# Test the Gaudi build
+RUN cd Gaudi/build && ctest -j8
+
+
+# === FINAL CLEAN UP ===
+
+# Clean up the APT cache
+RUN apt-get clean
