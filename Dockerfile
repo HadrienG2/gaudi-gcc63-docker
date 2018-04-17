@@ -79,8 +79,7 @@ RUN cd ROOT && mkdir build-dir && cd build-dir                                 \
 RUN cd ROOT/build-dir && ninja && ninja install
 
 # Prepare the environment for running ROOT
-RUN echo "export LD_LIBRARY_PATH=/usr/local/lib/root/:\${LD_LIBRARY_PATH}"     \
-      >> "$BASH_ENV"
+RUN echo "source /usr/local/bin/thisroot.sh" >> "$BASH_ENV"
 
 # Check that the ROOT install works
 RUN root -b -q -e "(6*7)-(6*7)"
