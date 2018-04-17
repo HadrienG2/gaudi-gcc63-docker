@@ -28,7 +28,8 @@ RUN apt-get install --yes git dpkg-dev g++ gcc binutils libx11-dev libxpm-dev  \
 RUN apt-get install --yes doxygen graphviz libboost-all-dev libcppunit-dev gdb \
                           unzip libxerces-c-dev uuid-dev libunwind-dev         \
                           google-perftools libgoogle-perftools-dev             \
-                          libjemalloc-dev libncurses5-dev ninja-build wget
+                          libjemalloc-dev libncurses5-dev ninja-build wget     \
+                          python-nose python-networkx
 
 
 # === INSTALL CMAKE ===
