@@ -17,7 +17,8 @@ RUN touch /setup_env.sh                                                        \
     && echo "unset BASH_ENV" > /root/bash_env.sh                               \
     && echo "source /setup_env.sh" >> /root/bash_env.sh                        \
     && echo "source /setup_env.sh" >> /root/.bashrc
-ENV BASH_ENV=/root/bash_env.sh, SETUP_ENV=/setup_env.sh
+ENV BASH_ENV="/root/bash_env.sh"                                               \
+    SETUP_ENV="/setup_env.sh"
 
 # Update the host system
 RUN apt-get update && apt-get upgrade --yes
