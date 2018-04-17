@@ -251,7 +251,13 @@ RUN ldconfig
 RUN cd Gaudi/build && ninja
 
 # Test the Gaudi build
-RUN cd Gaudi/build && ctest -j8
+#
+# NOTE: Some Gaudi tests do ptrace system calls, and will thus only run if the
+#       container is run with the "--security-opt=seccomp:unconfined" switch.
+#       Other tests are timing-sensitive, which is why I am not running ctest
+#       in multi-threaded mode for this build.
+#
+RUN cd Gaudi/build && ctest
 
 
 # === FINAL CLEAN UP ===
