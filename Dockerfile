@@ -7,7 +7,7 @@ SHELL ["/bin/bash", "-c"]
 # === SYSTEM SETUP ===
 
 # Setup an environment script (you can think of it as a non-interactive bashrc)
-RUN touch /bash_env.sh && echo "source /bash_env.sh" >> /etc/profile
+RUN touch /bash_env.sh && echo "source /bash_env.sh" >> ~/.bashrc
 ENV BASH_ENV /bash_env.sh
 
 # Update the host system
