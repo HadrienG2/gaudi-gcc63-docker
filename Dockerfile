@@ -252,12 +252,19 @@ RUN cd Gaudi/build && ninja
 
 # Test the Gaudi build
 #
-# NOTE: Some Gaudi tests do ptrace system calls, and will thus only run if the
-#       container is run with the "--security-opt=seccomp:unconfined" switch.
-#       Other tests are timing-sensitive, which is why I am not running ctest
-#       in multi-threaded mode for this build.
+# NOTE: The heap checker test does ptrace system calls, which are not allowed in
+#       unprivileged docker containers because they leak too much information
+#       about the host. You can allow the container to run this test by passing
+#       the "--security-opt=seccomp:unconfined" flag to docker run, but for some
+#       strange reason this flag cannot be passed to docker build. Therefore, we
+#       disable this specific test during the docker image build.
 #
-RUN cd Gaudi/build && ctest
+#       Other tests are timing-sensitive, which is why I am not running ctest in
+#       multi-threaded mode for the Gaudi build, unlike other builds. These
+#       tests may also fail if your build machine is too loaded during the
+#       docker build. If so, please kill some CPU hogs and restart the build.
+#
+RUN cd Gaudi/build && ctest -E "GaudiExamples\.google_auditors\.heapchecker"
 
 
 # === FINAL CLEAN UP ===
