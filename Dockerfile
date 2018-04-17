@@ -240,6 +240,13 @@ RUN git clone --origin upstream https://gitlab.cern.ch/gaudi/Gaudi/
 RUN cd Gaudi && mkdir build && cd build                                        \
     && cmake -DGAUDI_DIAGNOSTICS_COLOR=ON -GNinja ..
 
+# Configure the run-time linker
+#
+# NOTE: I am not sure why this is needed for this build specifically, but the
+#       Gaudi build will fail to find CLHEP if we don't do it.
+#
+RUN ldconfig
+
 # Build Gaudi
 RUN cd Gaudi/build && ninja
 
