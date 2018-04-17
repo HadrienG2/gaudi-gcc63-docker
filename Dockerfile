@@ -6,9 +6,18 @@ SHELL ["/bin/bash", "-c"]
 
 # === SYSTEM SETUP ===
 
-# Setup an environment script (you can think of it as a non-interactive bashrc)
-RUN touch /bash_env.sh && echo "source /bash_env.sh" >> ~/.bashrc
-ENV BASH_ENV /bash_env.sh
+# Build an environment setup script that works during docker build
+#
+# NOTE: This madness is necessary because docker build commands are run in a
+#       shell which is neither a login shell nor an interactive shell, and
+#       cannot be easily turned into either. Which means that there is no clean
+#       entry point for running environment setup scripts in docker build.
+#
+RUN touch /setup_env.sh                                                        \
+    && echo "unset BASH_ENV" > /root/bash_env.sh                               \
+    && echo "source /setup_env.sh" >> /root/bash_env.sh                        \
+    && echo "source /setup_env.sh" >> /root/.bashrc
+ENV BASH_ENV=/root/bash_env.sh, SETUP_ENV=/setup_env.sh
 
 # Update the host system
 RUN apt-get update && apt-get upgrade --yes
@@ -58,7 +67,7 @@ RUN cd tbb                                                                     \
     && make info | tail -n 1 > tbb_prefix.env                                  \
     && source tbb_prefix.env                                                   \
     && ln -s build/${tbb_build_prefix}_release lib                             \
-    && echo "source `pwd`/lib/tbbvars.sh" >> "$BASH_ENV"
+    && echo "source `pwd`/lib/tbbvars.sh" >> "$SETUP_ENV"
 
 
 # === INSTALL ROOT ===
@@ -79,7 +88,7 @@ RUN cd ROOT && mkdir build-dir && cd build-dir                                 \
 RUN cd ROOT/build-dir && ninja && ninja install
 
 # Prepare the environment for running ROOT
-RUN echo "source /usr/local/bin/thisroot.sh" >> "$BASH_ENV"
+RUN echo "source /usr/local/bin/thisroot.sh" >> "$SETUP_ENV"
 
 # Check that the ROOT install works
 RUN root -b -q -e "(6*7)-(6*7)"
