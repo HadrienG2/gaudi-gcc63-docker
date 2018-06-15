@@ -272,6 +272,9 @@ RUN cd Gaudi/build && ninja
 RUN cd Gaudi/build                                                             \
     && ctest -j8 -E "(google_auditors\.heapchecker|event_timeout_abort)"
 
+# Remove build byproducts to keep image light
+RUN cd Gaudi/build && ninja clean
+
 
 # === FINAL CLEAN UP ===
 
